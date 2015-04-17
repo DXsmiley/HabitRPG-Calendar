@@ -519,6 +519,30 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "Procfile",
+			"settings":
+			{
+				"buffer_size": 30,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "requirements.txt",
+			"settings":
+			{
+				"buffer_size": 43,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "original/habit.py",
+			"settings":
+			{
+				"buffer_size": 1951,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -651,8 +675,18 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/J/Bottle",
+		"/J/Bottle/gettingstarted",
+		"/J/Bottle/hello",
+		"/J/Bottle/original"
+	],
 	"file_history":
 	[
+		"/J/Bottle/requirements.txt",
+		"/J/Bottle/original/make_cal.py",
+		"/J/Bottle/runtime.txt",
 		"/J/Bottle/Procfile",
 		"/J/Bottle/gettingstarted/wsgi.py",
 		"/J/Bottle/html_writer.py",
@@ -777,10 +811,7 @@
 		"/J/Flexium/src/Transform.hpp",
 		"/J/test.cpp",
 		"/J/Flexium/demo/spritesheet.xml",
-		"/J/Flexium/demo/sound.wav",
-		"/J/Flexium/tests/spritesheet.xml",
-		"/J/TheMountain/maps/garden.tmx",
-		"/J/Flexium/src/TiledMapLoader.cpp"
+		"/J/Flexium/demo/sound.wav"
 	],
 	"find":
 	{
@@ -800,6 +831,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"port",
 			"'),\n",
 			"password",
 			"username",
@@ -926,8 +958,7 @@
 			"minimap",
 			"perc",
 			"wheel",
-			"scroll",
-			";\n"
+			"scroll"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -980,14 +1011,100 @@
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": false,
+		"whole_word": true,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "Procfile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 30,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								29,
+								29
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "requirements.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 43,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								43,
+								43
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "original/habit.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1951,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								823,
+								823
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 270.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -1652,7 +1769,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 222.0,
+	"side_bar_width": 228.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

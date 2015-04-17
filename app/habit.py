@@ -2,9 +2,25 @@ from bottle import *
 from html_writer import *
 import make_cal
 
+STATIC_PATH = './static'
+
 @route('/')
 def index():
-	return static_file('index.html', root='./original/static')
+	return static_file('index.html', root = STATIC_PATH)
+
+@route('/static/<filename>')
+def server_static(filename):
+	return static_file(filename, root = STATIC_PATH)
+
+@route('/favicon.ico')
+def favicon():
+	return static_file('favicon.ico', root = STATIC_PATH)
+
+@route('/cal')
+def cal():
+	uuid = request.get_cookie('uuid')
+	ukey = request.get_cookie('ukey')
+	return str(make_cal.make_cal(uuid, ukey))
 
 @route('/settings')
 def settings():
@@ -57,19 +73,5 @@ def settings_post():
 		)
 	)
 	return str(html)
-
-@route('/cal')
-def cal():
-	uuid = request.get_cookie('uuid')
-	ukey = request.get_cookie('ukey')
-	return str(make_cal.make_cal(uuid, ukey))
-
-@route('/static/<filename>')
-def server_static(filename):
-	return static_file(filename, root='./original/static')
-
-@route('/favicon.ico')
-def favicon():
-	return static_file('favicon.ico', root='./static')
 
 run(host = "0.0.0.0", port = int(os.environ.get("PORT", 80)))
