@@ -4,7 +4,7 @@ import make_cal
 
 @route('/')
 def index():
-	return static_file('index.html', root='./static')
+	return static_file('index.html', root='./original/static')
 
 @route('/settings')
 def settings():
@@ -66,7 +66,7 @@ def cal():
 
 @route('/static/<filename>')
 def server_static(filename):
-	return static_file(filename, root='./static')
+	return static_file(filename, root='./original/static')
 
 @route('/favicon.ico')
 def favicon():
