@@ -72,4 +72,4 @@ def server_static(filename):
 def favicon():
 	return static_file('favicon.ico', root='./static')
 
-run(host = 'localhost', port = 80)
+run(host = 'http://peaceful-hollows-4154.herokuapp.com', port = 80)
