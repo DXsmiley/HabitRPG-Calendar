@@ -51,8 +51,8 @@ def settings():
 def settings_post():
 	uuid = request.forms.get('uuid')
 	ukey = request.forms.get('ukey')
-	response.set_cookie('uuid', uuid)
-	response.set_cookie('ukey', ukey)
+	response.set_cookie('uuid', uuid, max_age = 350000)
+	response.set_cookie('ukey', ukey, max_age = 350000)
 	html = Tag('html')(
 		Tag('head')(
 			Tag('link', {'type': 'text/css', 'rel': 'stylesheet', 'href': 'static/normalise.css'}),
