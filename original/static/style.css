@@ -1,0 +1,60 @@
+.container {
+	margin: 0px auto;
+	width: 1700px;
+}
+
+.smallText {
+	color: lightgray;
+	font-size: 10px;
+	margin: 0px;
+}
+
+.lightBackground {
+	background-color: #f6f6f6;
+}
+
+.blueBackground {
+	background-color: #66ddff;
+}
+
+table, th, td {
+	background-color: white;
+	border: 1px solid lightgray;
+	border-spacing: 8px;
+	/*border-radius: 5px;*/
+	border-collapse: collapse;
+}
+
+td {
+	padding: 4px;
+	vertical-align: top;
+}
+
+table {
+	margin: auto;
+	width: 100%;
+	table-layout: fixed;
+}
+
+ul {
+	padding: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin: 0px;
+}
+
+body {
+	background-color: white;
+}
+
+p {
+	font-size: 14px;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+li {
+	font-size: 14px;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
