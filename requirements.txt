@@ -1,1 +1,3 @@
 bottle==0.12.8
+hrpg==0.0.4
+markdown==2.6.1
