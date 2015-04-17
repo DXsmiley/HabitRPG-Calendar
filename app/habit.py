@@ -2,6 +2,7 @@ from bottle import *
 from html_writer import *
 import make_cal
 import page_outline
+import sys
 
 STATIC_PATH = './static'
 
@@ -51,4 +52,15 @@ def settings_post():
 	)
 	return str(html)
 
-run(host = "0.0.0.0", port = int(os.environ.get("PORT", 80)))
+my_host = "0.0.0.0"
+my_port = int(os.environ.get("PORT", 80))
+
+for i in sys.argv[1:]:
+	if i.startswith('-host:'):
+		my_host = i[6:]
+		print('host:', my_host)
+	if i.startswith('-port:'):
+		my_port = int(i[6:])
+
+print(my_host, my_port)
+run(host = my_host, port = my_port)
