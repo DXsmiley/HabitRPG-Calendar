@@ -1,6 +1,7 @@
 from bottle import *
 from html_writer import *
 import make_cal
+import page_outline
 
 STATIC_PATH = './static'
 
@@ -20,29 +21,18 @@ def favicon():
 def cal():
 	uuid = request.get_cookie('uuid')
 	ukey = request.get_cookie('ukey')
+	if uuid == None or ukey == None:
+		return static_file('calerror.html', root = STATIC_PATH)
 	return str(make_cal.make_cal(uuid, ukey))
 
 @route('/settings')
 def settings():
-	html = Tag('html')(
-		Tag('head')(
-			Tag('link', {'type': 'text/css', 'rel': 'stylesheet', 'href': 'static/normalise.css'}),
-			Tag('link', {'type': 'text/css', 'rel': 'stylesheet', 'href': 'static/style.css'}),
-			Tag('title')(
-				'HabitRPG Calendar'
-			)
-		),
-		Tag('body')(
-			Tag('div', {'class': 'container'})(
-				Tag('h1')(
-					'HabitRPG Calendar'
-				),
-				Tag('form', {'action': '/settings', 'method': 'post'})(
-					'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
-					'API Key: ', Tag('input', {'name': 'ukey', 'type': 'text'}), Tag('br'),
-					Tag('input', {'value': 'Save', 'type': 'submit'})
-				)
-			)
+	html = page_outline.get()
+	html(
+		Tag('form', {'action': '/settings', 'method': 'post'})(
+			'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
+			'API Key: ', Tag('input', {'name': 'ukey', 'type': 'text'}), Tag('br'),
+			Tag('input', {'value': 'Save', 'type': 'submit'})
 		)
 	)
 	return str(html)
@@ -53,24 +43,11 @@ def settings_post():
 	ukey = request.forms.get('ukey')
 	response.set_cookie('uuid', uuid, max_age = 350000)
 	response.set_cookie('ukey', ukey, max_age = 350000)
-	html = Tag('html')(
-		Tag('head')(
-			Tag('link', {'type': 'text/css', 'rel': 'stylesheet', 'href': 'static/normalise.css'}),
-			Tag('link', {'type': 'text/css', 'rel': 'stylesheet', 'href': 'static/style.css'}),
-			Tag('title')(
-				'HabitRPG Calendar'
-			)
-		),
-		Tag('body')(
-			Tag('div', {'class': 'container'})(
-				Tag('h1')(
-					'HabitRPG Calendar'
-				),
-				Tag('p')('Settings saved'),
-				Tag('br'),
-				Tag('a', {'href': '/cal'})('Go to Calendar')
-			)
-		)
+	html = page_outline.get()
+	html(
+		Tag('p')('Settings saved'),
+		Tag('br'),
+		Tag('a', {'href': '/cal'})('Go to Calendar')
 	)
 	return str(html)
 

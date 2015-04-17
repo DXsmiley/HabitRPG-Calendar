@@ -3,6 +3,7 @@ import calendar
 import hrpg
 import hrpg.api
 import markdown
+import page_outline
 from html_writer import Tag
 
 # This was the original HabitCal thing before I made it a webapp
@@ -97,26 +98,13 @@ def make_cal(uuid, ukey):
 			row(cell)
 		the_table(row)
 
-	html_framework = Tag('html')(
-		Tag('head')(
-			Tag('link', {'type': 'text/css', 'rel': 'stylesheet', 'href': 'static/normalise.css'}),
-			Tag('link', {'type': 'text/css', 'rel': 'stylesheet', 'href': 'static/style.css'}),
-			Tag('title')(
-				'HabitRPG Calendar'
-			)
+	html_framework = page_outline.get()
+	html_framework(
+		Tag('p')(
+			'Current Date: ',
+			current_date
 		),
-		Tag('body')(
-			Tag('div', {'class': 'container'})(
-				Tag('h1')(
-					'HabitRPG Calendar'
-				),
-				Tag('p')(
-					'Current Date: ',
-					current_date
-				),
-				the_table
-			)
-		)
+		the_table
 	)
 
-	return str(html_framework)
+	return html_framework

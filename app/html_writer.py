@@ -8,9 +8,13 @@ class Tag():
 		self.name = str(name)
 		self.params = copy.copy(params)
 		self.contents = []
+		self.insert_point = None
 
 	def __call__(self, *args):
-		self.contents += args
+		if self.insert_point == None:
+			self.contents += args
+		else:
+			self.insert_point(*args)
 		return self
 
 	def __setitem__(self, key, value):
@@ -38,6 +42,10 @@ class Tag():
 			# Ending tag
 			s += '\n</' + self.name + '>\n'
 		return s
+
+	def set_insert_point(self, place):
+		self.insert_point = place
+		return self
 
 if __name__ == '__main__':
 
