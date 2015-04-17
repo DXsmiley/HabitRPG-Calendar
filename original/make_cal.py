@@ -3,7 +3,6 @@ import calendar
 import hrpg
 import hrpg.api
 import markdown
-import webbrowser
 from html_writer import Tag
 
 # This was the original HabitCal thing before I made it a webapp
