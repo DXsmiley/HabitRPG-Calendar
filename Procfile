@@ -1,1 +1,1 @@
-web: python original.habit
+web: python original/habit.py
