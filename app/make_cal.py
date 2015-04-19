@@ -44,6 +44,7 @@ def get_display_dates():
 	display_dates = list(display_dates)
 	display_dates.sort(key = lambda x: x.day)
 	display_dates.sort(key = lambda x: x.month)
+	display_dates.sort(key = lambda x: x.year)
 
 	return display_dates
 
@@ -55,6 +56,8 @@ def make_cal(uuid, ukey):
 
 		tasks_by_date = get_tasks(uuid, ukey)
 		display_dates = get_display_dates()
+
+		print(display_dates)
 
 		# Date stuff
 
