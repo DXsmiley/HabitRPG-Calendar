@@ -15,96 +15,103 @@ def make_cal(uuid, ukey):
 
 	# HabitRPG Stuff
 
-	hapi = hrpg.api.HRPG({'x-api-user': uuid, 'x-api-key': ukey})
+	try:
 
-	tasks = hapi.user.tasks()
+		hapi = hrpg.api.HRPG({'x-api-user': uuid, 'x-api-key': ukey})
 
-	tasks_by_date = {}
+		tasks = hapi.user.tasks()
 
-	for i in tasks:
-		if i.get('completed') == False and i['type'] == 'todo':
-			if 'date' in i:
-				datetext = i['date']
-				datetext = datetext[:datetext.find('T')]
-				dateparts = datetext.split('-')
-				dto = datetime.date(int(dateparts[0]), int(dateparts[1]), int(dateparts[2]))
-				if dto in tasks_by_date:
-					tasks_by_date[dto].append(i['text'])
-				else:
-					tasks_by_date[dto] = [i['text']]
+		tasks_by_date = {}
 
-	# Date stuff
+		for i in tasks:
+			if i.get('completed') == False and i['type'] == 'todo':
+				if 'date' in i:
+					datetext = i['date']
+					datetext = datetext[:datetext.find('T')]
+					dateparts = datetext.split('-')
+					dto = datetime.date(int(dateparts[0]), int(dateparts[1]), int(dateparts[2]))
+					if dto in tasks_by_date:
+						tasks_by_date[dto].append(i['text'])
+					else:
+						tasks_by_date[dto] = [i['text']]
 
-	dto_now = datetime.datetime.now()
-	current_date = '{}/{}/{}'.format(dto_now.day, dto_now.month, dto_now.year)
+		# Date stuff
 
-	def getDisplayDates(year, month):
-		if month > 12:
-			month -= 12
-			year += 1
-		return calendar.Calendar().itermonthdates(year, month)
+		dto_now = datetime.datetime.now()
+		current_date = '{}/{}/{}'.format(dto_now.day, dto_now.month, dto_now.year)
 
-	display_dates = set()
+		def getDisplayDates(year, month):
+			if month > 12:
+				month -= 12
+				year += 1
+			return calendar.Calendar().itermonthdates(year, month)
 
-	for i in range(1, 13):
-		display_dates = display_dates.union(set(getDisplayDates(dto_now.year, i)))
+		display_dates = set()
 
-	display_dates = list(display_dates)
-	display_dates.sort(key = lambda x: x.day)
-	display_dates.sort(key = lambda x: x.month)
+		for i in range(1, 13):
+			display_dates = display_dates.union(set(getDisplayDates(dto_now.year, i)))
 
-	# HTML Stuff
+		display_dates = list(display_dates)
+		display_dates.sort(key = lambda x: x.day)
+		display_dates.sort(key = lambda x: x.month)
 
-	days_of_week = [
-		'Monday',
-		'Tuesday',
-		'Wednesday',
-		'Thursday',
-		'Friday',
-		'Saturday',
-		'Sunday'
-	]
+		# HTML Stuff
 
-	months_of_year_short = [
-		'Jan', 'Feb', 'Mar', 'Apr',
-		'May', 'Jun', 'Jly', 'Aug',
-		'Sep', 'Oct', 'Nov', 'Dec'
-	]
+		days_of_week = [
+			'Monday',
+			'Tuesday',
+			'Wednesday',
+			'Thursday',
+			'Friday',
+			'Saturday',
+			'Sunday'
+		]
 
-	the_table = Tag('table', {'class': 'myTable'})(
-		Tag('tr')(
-			*[Tag('td')(Tag('p')(i)) for i in days_of_week]
+		months_of_year_short = [
+			'Jan', 'Feb', 'Mar', 'Apr',
+			'May', 'Jun', 'Jly', 'Aug',
+			'Sep', 'Oct', 'Nov', 'Dec'
+		]
+
+		the_table = Tag('table', {'class': 'myTable'})(
+			Tag('tr')(
+				*[Tag('td')(Tag('p')(i)) for i in days_of_week]
+			)
 		)
-	)
 
-	for i in range(0, len(display_dates), 7):
-		row = Tag('tr')
-		for j in display_dates[i: i + 7]:
-			text = '{} {}'.format(j.day, months_of_year_short[j.month - 1])
-			datetext = Tag('p', {'class': 'smallText'})(text)
-			markdown_html = ''
-			for k in tasks_by_date.get(j, []):
-				markdown_html += markdown.markdown(k)
-			#tlist = Tag('ul')
-			#for k in tasks_by_date.get(j, []):
-			#	tlist(Tag('li')(k))
-			# text = '{}/{}/{}'.format(j.year, j.month, j.day)
-			# print(text)
-			cell = Tag('td')(datetext, markdown_html)
-			if j.month % 2 == 0:
-				cell['class'] = 'lightBackground'
-			if j.month == dto_now.month and j.day == dto_now.day:
-				cell['class'] = 'blueBackground'
-			row(cell)
-		the_table(row)
+		for i in range(0, len(display_dates), 7):
+			row = Tag('tr')
+			for j in display_dates[i: i + 7]:
+				text = '{} {}'.format(j.day, months_of_year_short[j.month - 1])
+				datetext = Tag('p', {'class': 'smallText'})(text)
+				markdown_html = ''
+				for k in tasks_by_date.get(j, []):
+					markdown_html += markdown.markdown(k)
+				#tlist = Tag('ul')
+				#for k in tasks_by_date.get(j, []):
+				#	tlist(Tag('li')(k))
+				# text = '{}/{}/{}'.format(j.year, j.month, j.day)
+				# print(text)
+				cell = Tag('td')(datetext, markdown_html)
+				if j.month % 2 == 0:
+					cell['class'] = 'lightBackground'
+				if j.month == dto_now.month and j.day == dto_now.day:
+					cell['class'] = 'blueBackground'
+				row(cell)
+			the_table(row)
 
-	html_framework = page_outline.get()
-	html_framework(
-		Tag('p')(
-			'Current Date: ',
-			current_date
-		),
-		the_table
-	)
+		html_framework = page_outline.get()
+		html_framework(
+			Tag('p')(
+				'Current Date: ',
+				current_date
+			),
+			the_table
+		)
 
-	return html_framework
+		return html_framework
+
+	except Exception as e:
+
+		return Tag('p')('Error occurred: ', str(e))
+
