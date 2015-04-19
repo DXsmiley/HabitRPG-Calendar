@@ -36,7 +36,7 @@ def settings():
 	html(
 		Tag('form', {'action': '/settings', 'method': 'post'})(
 			'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
-			'API Key: ', Tag('input', {'name': 'ukey', 'type': 'text'}), Tag('br'),
+			'API Key: ', Tag('input', {'name': 'ukey', 'type': 'password'}), Tag('br'),
 			# 'Timezone: ', Tag('input', {'name': 'timezone', 'type': 'number', 'value': 0}), Tag('br'),
 			Tag('input', {'value': 'Save', 'type': 'submit'})
 		)
