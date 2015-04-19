@@ -19,10 +19,11 @@ def get_tasks(uuid, ukey):
 					datetext = datetext[:datetext.find('T')]
 					dateparts = datetext.split('-')
 					dto = datetime.date(int(dateparts[0]), int(dateparts[1]), int(dateparts[2]))
+					item = (i['text'], i['notes'])
 					if dto in tasks_by_date:
-						tasks_by_date[dto].append(i['text'])
+						tasks_by_date[dto].append(item)
 					else:
-						tasks_by_date[dto] = [i['text']]
+						tasks_by_date[dto] = [item]
 	return tasks_by_date
 
 def get_display_dates():
@@ -90,10 +91,13 @@ def make_cal(uuid, ukey):
 			for j in display_dates[i: i + 7]:
 				text = '{} {}'.format(j.day, months_of_year_short[j.month - 1])
 				datetext = Tag('p', {'class': 'smallText'})(text)
-				markdown_html = ''
+				contents_html = ''
 				for k in tasks_by_date.get(j, []):
-					markdown_html += markdown.markdown(k)
-				cell = Tag('td')(datetext, markdown_html)
+					markdown_html = markdown.markdown(k[0])
+					if k[1]:
+						markdown_html = '<span title="{}">{}</span>'.format(k[1], markdown_html)
+					contents_html += markdown_html
+				cell = Tag('td')(datetext, contents_html)
 				if j.month % 2 == 0:
 					cell['class'] = 'lightBackground'
 				if j.month == dto_now.month and j.day == dto_now.day:
