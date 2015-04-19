@@ -22,8 +22,12 @@ def favicon():
 def cal():
 	uuid = request.get_cookie('uuid')
 	ukey = request.get_cookie('ukey')
+	# return str(Tag('p')(uuid, '<br>', ukey))
+	# timezone = request.get_cookie('timezone')
 	if uuid == None or ukey == None:
-		return static_file('calerror.html', root = STATIC_PATH)
+		with open(STATIC_PATH + '/calerror.html') as f:
+			return f.read()
+		return '?'
 	return str(make_cal.make_cal(uuid, ukey))
 
 @route('/settings')
@@ -33,8 +37,13 @@ def settings():
 		Tag('form', {'action': '/settings', 'method': 'post'})(
 			'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
 			'API Key: ', Tag('input', {'name': 'ukey', 'type': 'text'}), Tag('br'),
+			# 'Timezone: ', Tag('input', {'name': 'timezone', 'type': 'number', 'value': 0}), Tag('br'),
 			Tag('input', {'value': 'Save', 'type': 'submit'})
 		)
+		# Tag('br'),
+		# Tag('p')(
+		# 	'Timezone not thoroughly tested. Be careful with it!'
+		# )
 	)
 	return str(html)
 
@@ -42,8 +51,10 @@ def settings():
 def settings_post():
 	uuid = request.forms.get('uuid')
 	ukey = request.forms.get('ukey')
+	# timezone = request.forms.get('timezone')
 	response.set_cookie('uuid', uuid, max_age = 350000)
 	response.set_cookie('ukey', ukey, max_age = 350000)
+	# response.set_cookie('timezone', timezone, max_age = 350000)
 	html = page_outline.get()
 	html(
 		Tag('p')('Settings saved'),

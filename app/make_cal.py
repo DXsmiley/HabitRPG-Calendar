@@ -4,29 +4,18 @@ import hrpg
 import hrpg.api
 import markdown
 import page_outline
+import traceback
 from html_writer import Tag
 
-# This was the original HabitCal thing before I made it a webapp
-# It's pretty rough around the edges.
-
-# The task collection should be seperated from the HTML generation :/
-
-def make_cal(uuid, ukey):
-
-	# HabitRPG Stuff
-
-	try:
-
-		hapi = hrpg.api.HRPG({'x-api-user': uuid, 'x-api-key': ukey})
-
-		tasks = hapi.user.tasks()
-
-		tasks_by_date = {}
-
-		for i in tasks:
-			if i.get('completed') == False and i['type'] == 'todo':
-				if 'date' in i:
-					datetext = i['date']
+def get_tasks(uuid, ukey):
+	hapi = hrpg.api.HRPG({'x-api-user': uuid, 'x-api-key': ukey})
+	tasks = hapi.user.tasks()
+	tasks_by_date = {}
+	for i in tasks:
+		if i.get('completed') == False and i['type'] == 'todo':
+			if 'date' in i:
+				datetext = i['date']
+				if datetext != None:
 					datetext = datetext[:datetext.find('T')]
 					dateparts = datetext.split('-')
 					dto = datetime.date(int(dateparts[0]), int(dateparts[1]), int(dateparts[2]))
@@ -34,26 +23,42 @@ def make_cal(uuid, ukey):
 						tasks_by_date[dto].append(i['text'])
 					else:
 						tasks_by_date[dto] = [i['text']]
+	return tasks_by_date
+
+def get_display_dates():
+
+	this_year = datetime.datetime.now().year
+
+	def dates_for_month(year, month):
+		if month > 12:
+			month -= 12
+			year += 1
+		return calendar.Calendar().itermonthdates(year, month)
+
+	display_dates = set()
+
+	for i in range(1, 13):
+		display_dates = display_dates.union(set(dates_for_month(this_year, i)))
+
+	display_dates = list(display_dates)
+	display_dates.sort(key = lambda x: x.day)
+	display_dates.sort(key = lambda x: x.month)
+
+	return display_dates
+
+def make_cal(uuid, ukey):
+
+	# HabitRPG Stuff
+
+	try:
+
+		tasks_by_date = get_tasks(uuid, ukey)
+		display_dates = get_display_dates()
 
 		# Date stuff
 
 		dto_now = datetime.datetime.now()
 		current_date = '{}/{}/{}'.format(dto_now.day, dto_now.month, dto_now.year)
-
-		def getDisplayDates(year, month):
-			if month > 12:
-				month -= 12
-				year += 1
-			return calendar.Calendar().itermonthdates(year, month)
-
-		display_dates = set()
-
-		for i in range(1, 13):
-			display_dates = display_dates.union(set(getDisplayDates(dto_now.year, i)))
-
-		display_dates = list(display_dates)
-		display_dates.sort(key = lambda x: x.day)
-		display_dates.sort(key = lambda x: x.month)
 
 		# HTML Stuff
 
@@ -73,6 +78,7 @@ def make_cal(uuid, ukey):
 			'Sep', 'Oct', 'Nov', 'Dec'
 		]
 
+		# Construct row of table
 		the_table = Tag('table', {'class': 'myTable'})(
 			Tag('tr')(
 				*[Tag('td')(Tag('p')(i)) for i in days_of_week]
@@ -87,11 +93,6 @@ def make_cal(uuid, ukey):
 				markdown_html = ''
 				for k in tasks_by_date.get(j, []):
 					markdown_html += markdown.markdown(k)
-				#tlist = Tag('ul')
-				#for k in tasks_by_date.get(j, []):
-				#	tlist(Tag('li')(k))
-				# text = '{}/{}/{}'.format(j.year, j.month, j.day)
-				# print(text)
 				cell = Tag('td')(datetext, markdown_html)
 				if j.month % 2 == 0:
 					cell['class'] = 'lightBackground'
@@ -113,5 +114,27 @@ def make_cal(uuid, ukey):
 
 	except Exception as e:
 
-		return Tag('p')('Error occurred: ', str(e))
+		trace = str(traceback.format_exc())
 
+		html_framework = page_outline.get()
+		html_framework(
+			Tag('p')(
+				'Something went wrong!',
+				Tag('br'),
+				'Go to the ', Tag('a', {'href': '/settings'})('settings page'), ' and input your details again.',
+				Tag('br'),
+				'If the problem keeps orruring, you can go to the ',
+				Tag('a', {'href': 'https://github.com/DXsmiley/HabitRPG-Calendar', 'target': '_blank'})('GitHub page'),
+				' and talk to DXsmiley about it. Alternatively, send me a message on HabitRPG (@DXsmiley).',
+				Tag('br'),
+				Tag('br'),
+				'Error occurred: ',
+				str(e),
+				Tag('br'),
+				'Traceback: ',
+				Tag('br'),
+				trace
+			)
+		)
+
+		return str(html_framework)
