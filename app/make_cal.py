@@ -5,9 +5,10 @@ import hrpg.api
 import markdown
 import page_outline
 import traceback
+import re
 from html_writer import Tag
 
-def get_tasks(uuid, ukey):
+def get_tasks(uuid, ukey, time_offset):
 	hapi = hrpg.api.HRPG({'x-api-user': uuid, 'x-api-key': ukey})
 	tasks = hapi.user.tasks()
 	tasks_by_date = {}
@@ -16,10 +17,13 @@ def get_tasks(uuid, ukey):
 			if 'date' in i:
 				datetext = i['date']
 				if datetext != None:
-					datetext = datetext[:datetext.find('T')]
-					dateparts = datetext.split('-')
-					dto = datetime.date(int(dateparts[0]), int(dateparts[1]), int(dateparts[2]))
+					dateparts = re.split(r'\-|\:|\.|T|Z', datetext)
+					dateparts = [int(i) for i in dateparts if i.isnumeric()]
+					dto = datetime.datetime(dateparts[0], dateparts[1], dateparts[2], dateparts[3])
+					# This should fix the off-by-one issue.
+					dto += datetime.timedelta(hours = 12)
 					item = (i['text'], i['notes'])
+					dto = dto.date() # Remove the time part.
 					if dto in tasks_by_date:
 						tasks_by_date[dto].append(item)
 					else:
@@ -48,21 +52,26 @@ def get_display_dates():
 
 	return display_dates
 
-def make_cal(uuid, ukey):
+def make_cal(uuid, ukey, timezone):
 
 	# HabitRPG Stuff
 
 	try:
 
-		tasks_by_date = get_tasks(uuid, ukey)
-		display_dates = get_display_dates()
-
-		print(display_dates)
-
 		# Date stuff
 
+		timezone_delta = datetime.timedelta(hours = int(timezone))
+
 		dto_now = datetime.datetime.now()
+		dto_now += timezone_delta
 		current_date = '{}/{}/{}'.format(dto_now.day, dto_now.month, dto_now.year)
+
+		display_dates = get_display_dates()
+		# print(display_dates)
+		
+		# Get tasks
+
+		tasks_by_date = get_tasks(uuid, ukey, timezone_delta)
 
 		# HTML Stuff
 
@@ -112,7 +121,8 @@ def make_cal(uuid, ukey):
 		html_framework(
 			Tag('p')(
 				'Current Date: ',
-				current_date
+				current_date,
+				' (UTC + ', timezone, ')'
 			),
 			the_table
 		)
