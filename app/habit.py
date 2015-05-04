@@ -39,6 +39,7 @@ def settings():
 			'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
 			'API Key: ', Tag('input', {'name': 'ukey', 'type': 'password'}), Tag('br'),
 			'Timezone: ', Tag('input', {'name': 'timezone', 'type': 'number', 'value': 0}), Tag('br'),
+			'Remember Me: ', Tag('input', {'name': 'remember', 'type': 'checkbox'}), Tag('br'),
 			Tag('input', {'value': 'Save', 'type': 'submit'})
 		)
 		# Tag('br'),
@@ -50,13 +51,18 @@ def settings():
 
 @route('/settings', method = 'POST')
 def settings_post():
-	COOKIE_TIMEOUT = 700000 # Just over 8 days
+	remember = request.forms.get('remember')
 	uuid = request.forms.get('uuid')
 	ukey = request.forms.get('ukey')
+	print('Remember: ', remember)
 	timezone = request.forms.get('timezone')
-	response.set_cookie('uuid', uuid, max_age = COOKIE_TIMEOUT)
-	response.set_cookie('ukey', ukey, max_age = COOKIE_TIMEOUT)
-	response.set_cookie('timezone', timezone, max_age = COOKIE_TIMEOUT)
+	if remember:
+		cookie_timeout = 700000 # Just over 8 days
+	else:
+		cookie_timeout = None # End of browser session
+	response.set_cookie('uuid', uuid, max_age = cookie_timeout)
+	response.set_cookie('ukey', ukey, max_age = cookie_timeout)
+	response.set_cookie('timezone', timezone, max_age = cookie_timeout)
 	html = page_outline.get()
 	html(
 		Tag('p')('Settings saved'),
