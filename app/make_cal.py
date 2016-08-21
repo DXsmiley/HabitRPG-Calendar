@@ -1,16 +1,22 @@
 import datetime
 import calendar
-import hrpg
-import hrpg.api
 import markdown
 import page_outline
 import traceback
 import re
+import requests
+import json
 from html_writer import Tag
 
 def get_tasks(uuid, ukey, time_offset):
-	hapi = hrpg.api.HRPG({'x-api-user': uuid, 'x-api-key': ukey})
-	tasks = hapi.user.tasks()
+	heads = {
+		'x-api-user': uuid,
+		'x-api-key': ukey,
+		'content-type': 'application/json'
+	}
+	r = requests.get('https://habitica.com/api/v3/tasks/user', headers = heads)
+	tasks = json.loads(str(r.content, encoding = 'utf-8'))
+	tasks = tasks['data']
 	tasks_by_date = {}
 	for i in tasks:
 		if i.get('completed') == False and i['type'] == 'todo':
