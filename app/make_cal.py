@@ -74,7 +74,7 @@ def make_cal(uuid, ukey, timezone):
 
 		display_dates = get_display_dates()
 		# print(display_dates)
-		
+
 		# Get tasks
 
 		tasks_by_date = get_tasks(uuid, ukey, timezone_delta)
@@ -125,11 +125,12 @@ def make_cal(uuid, ukey, timezone):
 
 		html_framework = page_outline.get()
 		html_framework(
-			Tag('p')(
-				'Current Date: ',
-				current_date,
-				' (UTC + ', timezone, ')'
-			),
+			Tag('h1')('HabitRPG Calendar'),
+			# Tag('p')(
+			# 	'Current Date: ',
+			# 	current_date,
+			# 	' (UTC + ', timezone, ')'
+			# ),
 			the_table
 		)
 

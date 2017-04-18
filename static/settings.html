@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<link href="static/normalise.css" rel="stylesheet" type="text/css" \>
+		<link href="static/index.css" rel="stylesheet" type="text/css" \>
+		<link href="favicon.ico" rel="stylesheet" type="image/ico" \>
+		<title>
+			HabitRPG Calendar
+		</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="banner">
+				<div class="internal">
+					<h2>We'll need some of your info</h2>
+					<form action="settings" method="post">
+						<table>
+							<tr>
+								<td class="leftside">  UUID </td>
+								<td class="rightside"> <input type="text" name="uuid" /> </td>
+							</tr>
+							<tr>
+								<td class="leftside">  API Key </td>
+								<td class="rightside"> <input type="text" name="ukey" /> </td>
+							</tr>
+							<tr>
+								<td class="leftside">  Timezone </td>
+								<td class="rightside"> <input type="number" name="timezone" value="0"/> </td>
+							</tr>
+							<tr>
+								<td class="leftside">  Remember Me </td>
+								<td class="rightside"> <input type="checkbox" name="remember" value="0"/> </td>
+							</tr>
+						</table>
+						<br>
+						<input type="submit" value="Let's go!">
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="support">
+			<p>Created by <a href="https://github.com/DXsmiley" target="_blank">DXsmiley</a></p>
+		</div>
+	</body>
+</html>

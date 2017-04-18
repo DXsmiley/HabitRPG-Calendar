@@ -1,0 +1,111 @@
+body {
+	background-color: rgb(75, 67, 119);
+	margin: 0px;
+}
+
+div.container {
+	width: 100vw;
+	min-height: 100vh;
+	overflow: hidden;
+	font-family: sans-serif;
+	display: flex;
+	align-items: center;
+	/*justify-content: center;*/
+}
+
+div.banner {
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f0f0f0;
+}
+
+div.internal {
+	text-align: center;
+	border-radius: 20px;
+	padding: 30px;
+}
+
+div.internal table {
+	display: inline-block;
+}
+
+td {
+	padding: 4px;
+}
+
+td.leftside {
+	text-align: right;
+}
+
+td.rightside {
+	text-align: left;
+}
+
+h1 {
+	font-size: 45px;
+	margin: 16px;
+	color: #202020;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 30px;
+	margin: 4px;
+	color: #202020;
+	font-weight: normal;
+}
+
+p {
+	font-size: 18px;
+	margin: 4px;
+	color: #202020;
+	font-weight: normal;
+}
+
+td {
+	font-size: 18px;
+	color: #202020;
+}
+
+button, input[type='submit'] {
+	position: relative;
+	top: 0px;
+	font-size: 1.4em;
+	background-color: rgb(147, 82, 231);
+	box-shadow: 0px 15px 15px #b0b0b0;
+	color: #202020;
+	border: none;
+	margin: 0px;
+	margin-top: 16px;
+	padding: 10px;
+	transition: ease-in-out 0.2s;
+}
+
+button:hover, input[type='submit']:hover {
+	top: -5px;
+	box-shadow: 0px 20px 20px #b0b0b0;
+}
+
+input[type='text'], input[type='number'] {
+	border: 1px solid #888888;
+	padding: 5px;
+}
+
+input[type='text']:focus, input[type='number']:focus {
+	border-color: rgb(147, 82, 231);
+	padding: 5px;
+}
+
+div.support {
+	position: absolute;
+	left: 40px;
+	bottom: 0px;
+	background-color: #f0f0f0;
+	padding: 10px;
+}
+
+a, a:visited {
+	color: rgb(147, 82, 231);
+}

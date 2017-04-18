@@ -33,21 +33,22 @@ def cal():
 
 @route('/settings')
 def settings():
-	html = page_outline.get()
-	html(
-		Tag('form', {'action': '/settings', 'method': 'post'})(
-			'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
-			'API Key: ', Tag('input', {'name': 'ukey', 'type': 'password'}), Tag('br'),
-			'Timezone: ', Tag('input', {'name': 'timezone', 'type': 'number', 'value': 0}), Tag('br'),
-			'Remember Me: ', Tag('input', {'name': 'remember', 'type': 'checkbox'}), Tag('br'),
-			Tag('input', {'value': 'Save', 'type': 'submit'})
-		)
-		# Tag('br'),
-		# Tag('p')(
-		# 	'Timezone not thoroughly tested. Be careful with it!'
-		# )
-	)
-	return str(html)
+	return static_file('settings.html', root = STATIC_PATH)
+	# html = page_outline.get()
+	# html(
+	# 	Tag('form', {'action': '/settings', 'method': 'post'})(
+	# 		'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
+	# 		'API Key: ', Tag('input', {'name': 'ukey', 'type': 'password'}), Tag('br'),
+	# 		'Timezone: ', Tag('input', {'name': 'timezone', 'type': 'number', 'value': 0}), Tag('br'),
+	# 		'Remember Me: ', Tag('input', {'name': 'remember', 'type': 'checkbox'}), Tag('br'),
+	# 		Tag('input', {'value': 'Save', 'type': 'submit'})
+	# 	)
+	# 	# Tag('br'),
+	# 	# Tag('p')(
+	# 	# 	'Timezone not thoroughly tested. Be careful with it!'
+	# 	# )
+	# )
+	# return str(html)
 
 @route('/settings', method = 'POST')
 def settings_post():

@@ -2,9 +2,9 @@ from html_writer import Tag
 
 def get():
 	target = Tag('div', {'class': 'container'})(
-		Tag('h1')(
-			'HabitRPG Calendar'
-		)
+		# Tag('h1')(
+		# 	'HabitRPG Calendar'
+		# )
 	)
 	framework = Tag('html')(
 		Tag('head')(
