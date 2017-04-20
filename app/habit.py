@@ -3,38 +3,17 @@ import aiohttp
 import aiohttp.web
 import asyncio
 import aiohttp_jinja2
-
-# from bottle import *
-# from html_writer import *
-import make_cal
-import page_outline
 import sys
 import os
 import markdown
 
+import make_cal
+import page_outline
 
-# def serve_single_file(filename):
-# 	data = open(filename, 'rb').read()
-# 	async def internal(request):
-# 		resp = aiohttp.web.Response()
-# 		# resp.prepare(request)
-# 		resp.start(request)
-# 		resp.write(data)
-# 		return resp
-# 		return internal
-# 	return internal
 
 loop = asyncio.get_event_loop()
 app = aiohttp.web.Application(loop = loop)
 
-def redirect_to(page):
-	async def do_redirect(request):
-		return aiohttp.web.HTTPSeeOther('/static/index.html')
-	return do_redirect
-
-app.router.add_static('/static', './static')
-app.router.add_get('/', redirect_to('/static/index.html'))
-app.router.add_get('/favicon.ico', redirect_to('./static/favicon.ico'))
 
 aiohttp_jinja2.setup(app,
 	loader = jinja2.FileSystemLoader('./templates/'),
@@ -45,7 +24,18 @@ aiohttp_jinja2.setup(app,
 )
 
 
-STATIC_PATH = './static'
+def redirect_to(page):
+	async def do_redirect(request):
+		return aiohttp.web.HTTPSeeOther('/static/index.html')
+	return do_redirect
+
+
+app.router.add_static('/static', './static')
+app.router.add_get('/', redirect_to('/static/index.html'))
+app.router.add_get('/favicon.ico', redirect_to('./static/favicon.ico'))
+
+
+COOKIE_LIFESPAN = 700000 # Just over 8 days
 
 
 @aiohttp_jinja2.template('calendar.html')
@@ -53,18 +43,11 @@ async def page_cal(request):
 	uuid = request.cookies.get('uuid')
 	ukey = request.cookies.get('ukey')
 	timezone = request.cookies.get('timezone')
+	remember = request.cookies.get('remember')
 	return {'weeks': make_cal.make_cal(uuid, ukey, timezone)}
-	# return aiohttp.web.Response(text = 'Page not implemented.')
-	# # return str(Tag('p')(uuid, '<br>', ukey))
-	# # timezone = request.get_cookie('timezone')
-	# if uuid == None or ukey == None:
-	# 	with open(STATIC_PATH + '/calerror.html') as f:
-	# 		return f.read()
-	# 	return '?'
-	# return str(make_cal.make_cal(uuid, ukey, timezone))
 app.router.add_get('/calendar', page_cal)
-
 app.router.add_get('/cal', redirect_to('/calendar'))
+
 
 async def settings_post(request):
 	form = await request.post()
@@ -74,13 +57,14 @@ async def settings_post(request):
 	print('Remember: ', remember)
 	timezone = form.get('timezone')
 	if remember:
-		cookie_timeout = 700000 # Just over 8 days
+		cookie_timeout = COOKIE_LIFESPAN
 	else:
 		cookie_timeout = None # End of browser session
 	response = aiohttp.web.HTTPSeeOther('/calendar')
 	response.set_cookie('uuid', uuid, max_age = cookie_timeout)
 	response.set_cookie('ukey', ukey, max_age = cookie_timeout)
 	response.set_cookie('timezone', timezone, max_age = cookie_timeout)
+	response.set_cookie('remember', 'yes', max_age = cookie_timeout)
 	return response
 app.router.add_post('/settings', settings_post)
 

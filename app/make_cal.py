@@ -58,134 +58,37 @@ def get_display_dates():
 
 	return display_dates
 
+
 MONTHS_OF_YEAR_SHORT = [
 	'Jan', 'Feb', 'Mar', 'Apr',
 	'May', 'Jun', 'Jly', 'Aug',
 	'Sep', 'Oct', 'Nov', 'Dec'
 ]
 
+
+# TODO: Rename to something more accurate
 def make_cal(uuid, ukey, timezone):
 
-	# HabitRPG Stuff
+	timezone_delta = datetime.timedelta(hours = int(timezone))
 
-	# try:
+	dto_now = datetime.datetime.now()
+	dto_now += timezone_delta
+	current_date = '{}/{}/{}'.format(dto_now.day, dto_now.month, dto_now.year)
 
-		# Date stuff
+	display_dates = get_display_dates()
 
+	tasks_by_date = get_tasks(uuid, ukey, timezone_delta)
 
-		timezone_delta = datetime.timedelta(hours = int(timezone))
-
-		dto_now = datetime.datetime.now()
-		dto_now += timezone_delta
-		current_date = '{}/{}/{}'.format(dto_now.day, dto_now.month, dto_now.year)
-
-		display_dates = get_display_dates()
-		# print(display_dates)
-
-		tasks_by_date = get_tasks(uuid, ukey, timezone_delta)
-
-		weeks = [
-			[
-				{
-					'name': '{} {}'.format(day.day, MONTHS_OF_YEAR_SHORT[day.month - 1]),
-					'tasks': tasks_by_date.get(day, []),
-					'month': day.month
-				}
-				for day in week
-			]
-			for week in (display_dates[i:i+7] for i in range(0, len(display_dates), 7))
+	weeks = [
+		[
+			{
+				'name': '{} {}'.format(day.day, MONTHS_OF_YEAR_SHORT[day.month - 1]),
+				'tasks': tasks_by_date.get(day, []),
+				'month': day.month
+			}
+			for day in week
 		]
+		for week in (display_dates[i:i+7] for i in range(0, len(display_dates), 7))
+	]
 
-		# print(json.dumps(weeks, indent = 4))
-
-		return weeks
-
-		# Get tasks
-
-		# tasks_by_date = get_tasks(uuid, ukey, timezone_delta)
-		#
-		# # HTML Stuff
-		#
-		# days_of_week = [
-		# 	'Monday',
-		# 	'Tuesday',
-		# 	'Wednesday',
-		# 	'Thursday',
-		# 	'Friday',
-		# 	'Saturday',
-		# 	'Sunday'
-		# ]
-		#
-		# months_of_year_short = [
-		# 	'Jan', 'Feb', 'Mar', 'Apr',
-		# 	'May', 'Jun', 'Jly', 'Aug',
-		# 	'Sep', 'Oct', 'Nov', 'Dec'
-		# ]
-		#
-		# # Construct row of table
-		# the_table = Tag('table', {'class': 'myTable'})(
-		# 	Tag('tr')(
-		# 		*[Tag('td')(Tag('p')(i)) for i in days_of_week]
-		# 	)
-		# )
-		#
-		# for i in range(0, len(display_dates), 7):
-		# 	row = Tag('tr')
-		# 	for j in display_dates[i: i + 7]:
-		# 		text = '{} {}'.format(j.day, months_of_year_short[j.month - 1])
-		# 		datetext = Tag('p', {'class': 'smallText'})(text)
-		# 		contents_html = ''
-		# 		for k in tasks_by_date.get(j, []):
-		# 			markdown_html = markdown.markdown(k[0])
-		# 			if k[1]:
-		# 				markdown_html = '<span title="{}">{}</span>'.format(k[1], markdown_html)
-		# 			contents_html += markdown_html
-		# 		cell = Tag('td')(datetext, contents_html)
-		# 		if j.month % 2 == 0:
-		# 			cell['class'] = 'lightBackground'
-		# 		if j.month == dto_now.month and j.day == dto_now.day:
-		# 			cell['class'] = 'blueBackground'
-		# 		row(cell)
-		# 	the_table(row)
-		#
-		# html_framework = page_outline.get()
-		# html_framework(
-		# 	Tag('h1')('HabitRPG Calendar'),
-		# 	# Tag('p')(
-		# 	# 	'Current Date: ',
-		# 	# 	current_date,
-		# 	# 	' (UTC + ', timezone, ')'
-		# 	# ),
-		# 	the_table
-		# )
-		#
-		# return html_framework
-
-	# except Exception as e:
-
-
-
-		# trace = str(traceback.format_exc())
-		#
-		# html_framework = page_outline.get()
-		# html_framework(
-		# 	Tag('p')(
-		# 		'Something went wrong!',
-		# 		Tag('br'),
-		# 		'Go to the ', Tag('a', {'href': '/settings'})('settings page'), ' and input your details again.',
-		# 		Tag('br'),
-		# 		'If the problem keeps orruring, you can go to the ',
-		# 		Tag('a', {'href': 'https://github.com/DXsmiley/HabitRPG-Calendar', 'target': '_blank'})('GitHub page'),
-		# 		' and talk to DXsmiley about it. Alternatively, send me a message on HabitRPG (@DXsmiley).',
-		# 		Tag('br'),
-		# 		Tag('br'),
-		# 		'Error occurred: ',
-		# 		str(e),
-		# 		Tag('br'),
-		# 		'Traceback: ',
-		# 		Tag('br'),
-		# 		trace
-		# 	)
-		# )
-		#
-		# return str(html_framework)
+	return weeks
