@@ -1,86 +1,90 @@
-from bottle import *
-from html_writer import *
+import jinja2
+import aiohttp
+import aiohttp.web
+import asyncio
+import aiohttp_jinja2
+
+# from bottle import *
+# from html_writer import *
 import make_cal
 import page_outline
 import sys
+import os
+import markdown
+
+
+# def serve_single_file(filename):
+# 	data = open(filename, 'rb').read()
+# 	async def internal(request):
+# 		resp = aiohttp.web.Response()
+# 		# resp.prepare(request)
+# 		resp.start(request)
+# 		resp.write(data)
+# 		return resp
+# 		return internal
+# 	return internal
+
+loop = asyncio.get_event_loop()
+app = aiohttp.web.Application(loop = loop)
+
+def redirect_to(page):
+	async def do_redirect(request):
+		return aiohttp.web.HTTPSeeOther('/static/index.html')
+	return do_redirect
+
+app.router.add_static('/static', './static')
+app.router.add_get('/', redirect_to('/static/index.html'))
+app.router.add_get('/favicon.ico', redirect_to('./static/favicon.ico'))
+
+aiohttp_jinja2.setup(app,
+	loader = jinja2.FileSystemLoader('./templates/'),
+	autoescape = jinja2.select_autoescape(['html', 'xml', 'j2']),
+	filters = {
+		'markdown': lambda text: jinja2.Markup(markdown.markdown(text))
+	}
+)
+
 
 STATIC_PATH = './static'
 
-@route('/')
-def index():
-	return static_file('index.html', root = STATIC_PATH)
 
-@route('/static/<filename>')
-def server_static(filename):
-	return static_file(filename, root = STATIC_PATH)
+@aiohttp_jinja2.template('calendar.html')
+async def page_cal(request):
+	uuid = request.cookies.get('uuid')
+	ukey = request.cookies.get('ukey')
+	timezone = request.cookies.get('timezone')
+	return {'weeks': make_cal.make_cal(uuid, ukey, timezone)}
+	# return aiohttp.web.Response(text = 'Page not implemented.')
+	# # return str(Tag('p')(uuid, '<br>', ukey))
+	# # timezone = request.get_cookie('timezone')
+	# if uuid == None or ukey == None:
+	# 	with open(STATIC_PATH + '/calerror.html') as f:
+	# 		return f.read()
+	# 	return '?'
+	# return str(make_cal.make_cal(uuid, ukey, timezone))
+app.router.add_get('/calendar', page_cal)
 
-@route('/favicon.ico')
-def favicon():
-	return static_file('favicon.ico', root = STATIC_PATH)
+app.router.add_get('/cal', redirect_to('/calendar'))
 
-@route('/cal')
-def cal():
-	uuid = request.get_cookie('uuid')
-	ukey = request.get_cookie('ukey')
-	timezone = request.get_cookie('timezone')
-	# return str(Tag('p')(uuid, '<br>', ukey))
-	# timezone = request.get_cookie('timezone')
-	if uuid == None or ukey == None:
-		with open(STATIC_PATH + '/calerror.html') as f:
-			return f.read()
-		return '?'
-	return str(make_cal.make_cal(uuid, ukey, timezone))
-
-@route('/settings')
-def settings():
-	return static_file('settings.html', root = STATIC_PATH)
-	# html = page_outline.get()
-	# html(
-	# 	Tag('form', {'action': '/settings', 'method': 'post'})(
-	# 		'UUID: ', Tag('input', {'name': 'uuid', 'type': 'text'}), Tag('br'),
-	# 		'API Key: ', Tag('input', {'name': 'ukey', 'type': 'password'}), Tag('br'),
-	# 		'Timezone: ', Tag('input', {'name': 'timezone', 'type': 'number', 'value': 0}), Tag('br'),
-	# 		'Remember Me: ', Tag('input', {'name': 'remember', 'type': 'checkbox'}), Tag('br'),
-	# 		Tag('input', {'value': 'Save', 'type': 'submit'})
-	# 	)
-	# 	# Tag('br'),
-	# 	# Tag('p')(
-	# 	# 	'Timezone not thoroughly tested. Be careful with it!'
-	# 	# )
-	# )
-	# return str(html)
-
-@route('/settings', method = 'POST')
-def settings_post():
-	remember = request.forms.get('remember')
-	uuid = request.forms.get('uuid')
-	ukey = request.forms.get('ukey')
+async def settings_post(request):
+	form = await request.post()
+	remember = form.get('remember')
+	uuid = form.get('uuid')
+	ukey = form.get('ukey')
 	print('Remember: ', remember)
-	timezone = request.forms.get('timezone')
+	timezone = form.get('timezone')
 	if remember:
 		cookie_timeout = 700000 # Just over 8 days
 	else:
 		cookie_timeout = None # End of browser session
+	response = aiohttp.web.HTTPSeeOther('/calendar')
 	response.set_cookie('uuid', uuid, max_age = cookie_timeout)
 	response.set_cookie('ukey', ukey, max_age = cookie_timeout)
 	response.set_cookie('timezone', timezone, max_age = cookie_timeout)
-	html = page_outline.get()
-	html(
-		Tag('p')('Settings saved'),
-		Tag('br'),
-		Tag('a', {'href': '/cal'})('Go to Calendar')
-	)
-	return str(html)
+	return response
+app.router.add_post('/settings', settings_post)
 
-my_host = "0.0.0.0"
-my_port = int(os.environ.get("PORT", 80))
 
-for i in sys.argv[1:]:
-	if i.startswith('-host:'):
-		my_host = i[6:]
-		print('host:', my_host)
-	if i.startswith('-port:'):
-		my_port = int(i[6:])
-
-print(my_host, my_port)
-run(host = my_host, port = my_port)
+if __name__ == '__main__':
+	p = os.getenv('PORT')
+	aiohttp.web.run_app(app, host = '0.0.0.0', port = int(p) if p else 5000)

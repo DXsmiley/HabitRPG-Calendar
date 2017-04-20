@@ -1,8 +1,8 @@
 <html>
 	<head>
-		<link href="static/normalise.css" rel="stylesheet" type="text/css" \>
-		<link href="static/index.css" rel="stylesheet" type="text/css" \>
-		<link href="favicon.ico" rel="stylesheet" type="image/ico" \>
+		<link href="/static/normalise.css" rel="stylesheet" type="text/css" \>
+		<link href="/static/index.css" rel="stylesheet" type="text/css" \>
+		<link href="/favicon.ico" rel="stylesheet" type="image/ico" \>
 		<title>
 			HabitRPG Calendar
 		</title>
@@ -12,7 +12,7 @@
 			<div class="banner">
 				<div class="internal">
 					<h2>We'll need some of your info</h2>
-					<form action="settings" method="post">
+					<form action="/settings" method="post">
 						<table>
 							<tr>
 								<td class="leftside">  UUID </td>
@@ -33,6 +33,8 @@
 						</table>
 						<br>
 						<input type="submit" value="Let's go!">
+						<!-- I know this is an inline style, I'll fix it later... maybe. -->
+						<p style="max-width: 500px; opacity: 0.8; margin-top: 40px;">If you're using the habitica website, you can find your UUID and API Key by clicking the gear in the top right, and then clicking on "API".</p>
 					</form>
 				</div>
 			</div>

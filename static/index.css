@@ -80,7 +80,7 @@ button, input[type='submit'] {
 	margin: 0px;
 	margin-top: 16px;
 	padding: 10px;
-	transition: ease-in-out 0.2s;
+	transition: top ease-in-out 0.2s, box-shadow ease-in-out 0.2s;
 }
 
 button:hover, input[type='submit']:hover {
