@@ -8,8 +8,6 @@ import os
 import markdown
 
 import make_cal
-import page_outline
-
 
 loop = asyncio.get_event_loop()
 app = aiohttp.web.Application(loop = loop)
@@ -55,7 +53,11 @@ async def page_cal(request):
 	ukey = request.cookies.get('ukey')
 	timezone = request.cookies.get('timezone')
 	remember = request.cookies.get('remember')
-	return {'weeks': make_cal.make_cal(uuid, ukey, timezone)}
+	current_date, weeks = make_cal.make_cal(uuid, ukey, timezone)
+	return {
+		'today': current_date,
+		'weeks': weeks
+	}
 app.router.add_get('/calendar', page_cal)
 app.router.add_get('/cal', redirect_to('/calendar'))
 

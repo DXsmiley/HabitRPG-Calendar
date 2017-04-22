@@ -13,20 +13,21 @@
 	background-color: #f6f6f6;
 }
 
-.blueBackground {
-	background-color: rgb(147, 82, 231);
-}
-
-.blueBackground .smallText {
-	color: #f6f6f6;
-}
-
 table, th, td {
 	background-color: white;
-	border: 1px solid #d0d0d0;
+	border-bottom: 1px solid #d0d0d0;
+	border-top: 1px solid #d0d0d0;
+	border-left: 1px solid rgb(147, 82, 231);
+	border-right: 1px solid rgb(147, 82, 231);
 	border-spacing: 8px;
 	/*border-radius: 5px;*/
 	border-collapse: collapse;
+}
+
+th {
+	background-color: rgb(147, 82, 231);
+	color: white;
+	border-color: rgb(147, 82, 231);
 }
 
 td {
@@ -66,5 +67,14 @@ li {
 }
 
 h1 {
+	color: #f6f6f6;
+}
+
+.blueBackground {
+	background-color: rgb(147, 82, 231);
+	color: #f6f6f6;
+}
+
+.blueBackground .smallText {
 	color: #f6f6f6;
 }

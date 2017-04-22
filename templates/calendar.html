@@ -25,7 +25,7 @@
 				{% for week in weeks %}
 					<tr>
 						{% for day in week %}
-							<td class="{{ '' if day.month % 2 == 1 else 'lightBackground' }}">
+							<td class="{{ 'blueBackground' if day.mask == today else ('' if day.month % 2 == 1 else 'lightBackground') }}">
 								<p class="smallText">{{ day.name }}</p>
 								{% for task in day.tasks %}
 									<span title="{{ task[1] }}">

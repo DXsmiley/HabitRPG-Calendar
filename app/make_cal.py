@@ -1,12 +1,10 @@
 import datetime
 import calendar
 import markdown
-import page_outline
 import traceback
 import re
 import requests
 import json
-from html_writer import Tag
 
 def get_tasks(uuid, ukey, time_offset):
 	heads = {
@@ -82,6 +80,7 @@ def make_cal(uuid, ukey, timezone):
 	weeks = [
 		[
 			{
+				'mask': '{}/{}/{}'.format(day.day, day.month, day.year),
 				'name': '{} {}'.format(day.day, MONTHS_OF_YEAR_SHORT[day.month - 1]),
 				'tasks': tasks_by_date.get(day, []),
 				'month': day.month
@@ -91,4 +90,4 @@ def make_cal(uuid, ukey, timezone):
 		for week in (display_dates[i:i+7] for i in range(0, len(display_dates), 7))
 	]
 
-	return weeks
+	return current_date, weeks
