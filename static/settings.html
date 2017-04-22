@@ -24,7 +24,7 @@
 							</tr>
 							<tr>
 								<td class="leftside">  Timezone </td>
-								<td class="rightside"> <input type="number" name="timezone" value="0"/> </td>
+								<td class="rightside"> <input id="timezone-input" type="number" name="timezone" value="0"/> </td>
 							</tr>
 							<tr>
 								<td class="leftside">  Remember Me </td>
@@ -42,5 +42,10 @@
 		<div class="support">
 			<p>Created by <a href="https://github.com/DXsmiley" target="_blank">DXsmiley</a></p>
 		</div>
+		<script type="text/javascript">
+			// Determine user's current time zone, auto-populate the field
+			var offset = -new Date().getTimezoneOffset() / 60;
+			document.getElementById("timezone-input").value = '' + offset;
+		</script>
 	</body>
 </html>
