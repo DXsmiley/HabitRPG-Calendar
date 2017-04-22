@@ -15,13 +15,16 @@
 
 table, th, td {
 	background-color: white;
-	border-bottom: 1px solid #d0d0d0;
 	border-top: 1px solid #d0d0d0;
 	border-left: 1px solid rgb(147, 82, 231);
 	border-right: 1px solid rgb(147, 82, 231);
 	border-spacing: 8px;
 	/*border-radius: 5px;*/
 	border-collapse: collapse;
+}
+
+table {
+	border-bottom: 1px solid rgb(147, 82, 231);
 }
 
 th {
