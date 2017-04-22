@@ -24,20 +24,31 @@ aiohttp_jinja2.setup(app,
 )
 
 
+def heroku_require_https(func):
+	async def replacement(request):
+		if request.headers.get('x-forwarded-proto') == 'http':
+			print('Pushing someone from http to https')
+			url = 'https://{host}{path}'.format(host = request.host, path = request.path_qs)
+			return aiohttp.web.HTTPSeeOther(url)
+		return await func(request)
+	return replacement
+
+
 def redirect_to(page):
 	async def do_redirect(request):
-		return aiohttp.web.HTTPSeeOther('/static/index.html')
+		return aiohttp.web.HTTPSeeOther(page)
 	return do_redirect
 
 
 app.router.add_static('/static', './static')
-app.router.add_get('/', redirect_to('/static/index.html'))
+app.router.add_get('/', heroku_require_https(redirect_to('/static/index.html')))
 app.router.add_get('/favicon.ico', redirect_to('./static/favicon.ico'))
 
 
 COOKIE_LIFESPAN = 700000 # Just over 8 days
 
 
+@heroku_require_https
 @aiohttp_jinja2.template('calendar.html')
 async def page_cal(request):
 	uuid = request.cookies.get('uuid')
@@ -49,6 +60,7 @@ app.router.add_get('/calendar', page_cal)
 app.router.add_get('/cal', redirect_to('/calendar'))
 
 
+@heroku_require_https
 async def settings_post(request):
 	form = await request.post()
 	remember = form.get('remember')
