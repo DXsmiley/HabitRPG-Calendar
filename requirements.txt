@@ -1,5 +1,6 @@
-bottle==0.12.8
-requests==2.9.1
-markdown==2.6.1
+requests
+markdown
 pytz==2015.2
 jinja2
+aiohttp
+aiohttp-jinja2
