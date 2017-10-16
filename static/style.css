@@ -64,6 +64,14 @@ p {
 	margin-bottom: 4px;
 }
 
+span.timezone {
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 10px;
+	color: white;
+}
+
 li {
 	font-size: 14px;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;

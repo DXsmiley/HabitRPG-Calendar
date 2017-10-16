@@ -52,11 +52,13 @@ async def page_cal(request):
 	uuid = request.cookies.get('uuid')
 	ukey = request.cookies.get('ukey')
 	timezone = request.cookies.get('timezone')
-	remember = request.cookies.get('remember')
+	if uuid is None or ukey is None or timezone is None:
+		raise aiohttp.web.HTTPSeeOther('/static/settings.html')
 	current_date, weeks = make_cal.make_cal(uuid, ukey, timezone)
 	return {
 		'today': current_date,
-		'weeks': weeks
+		'weeks': weeks,
+		'timezone': timezone
 	}
 app.router.add_get('/calendar', page_cal)
 app.router.add_get('/cal', redirect_to('/calendar'))
